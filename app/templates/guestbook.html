@@ -29,7 +29,6 @@
       </script>
       <form action="password_check" onsubmit="return check_delete();" method="POST">
         <br /><br /><br /><br /><br /><br />
-        삭제하고 싶니?
         <input type="hidden" name="id" value="{{get_id}}" />
         <input type="hidden" name="_method" value="delete" />
         <input type="hidden" name="password" value="{{view['password']}}">
@@ -37,7 +36,6 @@
       </form>
       <form action="password_check" onsubmit="return check_update();" method="POST">
         <br />
-        수정하고 싶니?
         <input type="hidden" name="id" value="{{get_id}}" />
         <input type="hidden" name="_method" value="update" />
         <input type="hidden" name="password" value="{{view['password']}}">

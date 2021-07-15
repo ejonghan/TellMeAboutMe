@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for
+from flask import Blueprint, request, render_template, flash, redirect, url_for, jsonify
 from flask import current_app as app
 
 from app.module.dbModule import Database
@@ -30,9 +30,8 @@ def submit():
         return render_template('/submit.html')
 
 
-@main.route('/guestbook_list', methods=['GET', 'post'])
+@main.route('/guestbook_list', methods=['GET', 'post', 'DELETE'])
 def guestbook_list():
-
     if request.method == 'GET':
 
         # database select query
@@ -50,6 +49,22 @@ def guestbook_list():
         return render_template('/guestbook_list.html', view_dict=view_dict)
 
     elif request.method == 'POST':
+
+        # database select query
+        db = Database()
+        sql = "SELECT * FROM tellmeaboutme.list"
+        view = db.executeAll(sql)
+
+        view_dict = {}
+
+        # create dict using script
+        for i in range(len(view)):
+
+            view_dict[str(view[i]['id'])] = f"{view[i]['writter']}님의 게시물"
+
+        return render_template('/guestbook_list.html', view_dict=view_dict)
+
+    elif request.method == 'DELETE':
 
         # database select query
         db = Database()
@@ -95,28 +110,38 @@ def guestbook():
 @main.route('/guestbook/<int:id>', methods=['GET'])
 def anchor_routing_guestbook(id):
 
-    return redirect(url_for('main.guestbook', id=id))
+    return redirect(url_for('main.guestbook', _method='POST', id=id))
 
 
-@main.route('/delete', methods=["POST", "GET"])
+@main.route('/delete', methods=["DELETE"])
 def delete():
 
-    get_id = request.args.get('id')
+    info = request.get_json()
 
-    db = Database()
-    # database delete query
-    delete_sql = f"DELETE FROM tellmeaboutme.list WHERE id={get_id}"
-    db.execute(delete_sql)
-    # database auto_increment(id value) rearrange query
-    auto_increment_sql1 = "ALTER TABLE tellmeaboutme.list AUTO_INCREMENT=1"
-    db.execute(auto_increment_sql1)
-    auto_increment_sql2 = "SET @count = 0"
-    db.execute(auto_increment_sql2)
-    auto_increment_sql3 = "UPDATE tellmeaboutme.list SET id = @count:=@count+1"
-    db.execute(auto_increment_sql3)
-    db.commit()
+    get_id = info['id']
+    origin_password = info['origin_password']
+    input_password = info['input_password']
+    print(info)
+    if origin_password == input_password:
+        db = Database()
 
-    return redirect(url_for('main.guestbook_list'))
+        # database delete query
+        delete_sql = f"DELETE FROM tellmeaboutme.list WHERE id={get_id}"
+        db.execute(delete_sql)
+
+        # database auto_increment(id value) rearrange query
+        auto_increment_sql1 = "ALTER TABLE tellmeaboutme.list AUTO_INCREMENT=1"
+        db.execute(auto_increment_sql1)
+        auto_increment_sql2 = "SET @count = 0"
+        db.execute(auto_increment_sql2)
+        auto_increment_sql3 = "UPDATE tellmeaboutme.list SET id = @count:=@count+1"
+        db.execute(auto_increment_sql3)
+        db.commit()
+
+        return redirect(url_for('main.guestbook_list'))
+
+    else:
+        return jsonify(message="비밀번호 틀렸엉 !")
 
 
 @main.route('/update', methods=["POST"])
@@ -166,4 +191,4 @@ def password_check():
     get_id = request.form['id']
     password = request.form['password']
 
-    return render_template('/checkpassword.html', _method=_method, get_id=get_id, password=password)
+    return render_template('/checkpassword1.html', _method=_method, get_id=get_id, password=password)
