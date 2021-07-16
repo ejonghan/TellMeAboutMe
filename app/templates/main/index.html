@@ -8,6 +8,7 @@
         text-align: center;
       }
     </style>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
   </head>
 
   <body>
@@ -15,49 +16,47 @@
       <h1>방명록</h1>
     </div>
     <div>
+      <input type="text" id="writter" placeholder="니 이름 써라" /><br /><br />
+      <textarea rows="5" cols="30" id="description"></textarea><br /><br />
+      <input
+        type="text"
+        id="password"
+        placeholder="비밀번호 써라"
+      /><br /><br />
+      <input type="button" id="execute" value="완료" />
       <script>
-        function confirm_check() {
-          var writter = document.getElementById("writter").value;
-          var description = document.getElementById("description").value;
-          var password = document.getElementById("password").value;
+        $("#execute").click(function () {
+          var writter = $("#writter").val();
+          var description = $("#description").val();
+          var password = $("#password").val();
 
-          if (writter == "") {
-            alert("이름 써!!");
-            return false;
-          } else if (description == "") {
-            alert("내용 써!!");
-            return false;
-          } else if (password == "") {
-            alert("비밀번호 써!!");
-            return false;
-          }
-          return true;
-        }
+          var postdata = {
+            writter: writter,
+            description: description,
+            password: password,
+          };
+
+          $.ajax({
+            type: "POST",
+            url: '{{url_for("main.input_form")}}',
+            data: JSON.stringify(postdata),
+            dataType: "JSON",
+            contentType: "application/json",
+            success: function (msg) {
+              if (msg == "empty writter") {
+                alert("이름 써 !!!");
+              } else if (msg == "empty description") {
+                alert("내용 써 !!!");
+              } else if (msg == "empty password") {
+                alert("비밀번호 써 !!!");
+              } else {
+                alert("잘했어 !");
+                window.location.href = "/submit";
+              }
+            },
+          });
+        });
       </script>
-      <form action="submit" onsubmit="return confirm_check()" method="post">
-        <input
-          type="text"
-          name="writter"
-          id="writter"
-          size="15"
-          placeholder="니 이름 써라"
-        />
-        <br />
-        <br />
-        <textarea name="description" rows="5," cols="30" id="description">
-        </textarea>
-        <br />
-        <br />
-        <input
-          type="text"
-          name="password"
-          id="password"
-          size="15"
-          placeholder="비밀번호 적어"
-        />
-        <br /><br />
-        <input type="submit" value="완료" />
-      </form>
     </div>
   </body>
 </html>

@@ -27,14 +27,14 @@
           return confirm("수정할꺼야?");
         }
       </script>
-      <form action="divide_method" onsubmit="return check_delete();" method="POST">
+      <form action="password_check" onsubmit="return check_delete();" method="POST">
         <br /><br /><br /><br /><br /><br />
         <input type="hidden" name="id" value="{{get_id}}" />
         <input type="hidden" name="_method" value="delete" />
         <input type="hidden" name="password" value="{{view['password']}}">
         <input type="submit" value="삭제하기" />
       </form>
-      <form action="divide_method" onsubmit="return check_update();" method="POST">
+      <form action="password_check" onsubmit="return check_update();" method="POST">
         <br />
         <input type="hidden" name="id" value="{{get_id}}" />
         <input type="hidden" name="_method" value="update" />

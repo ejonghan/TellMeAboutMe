@@ -33,8 +33,14 @@
             dataType: "JSON",
             contentType: "application/json",
             success: function (msg) {
-              alert("수정되었어!");
-              window.location.href = "/guestbook_list";
+              if (msg == "empty_writter") {
+                alert("이름 써 !!!");
+              } else if (msg == "empty_description") {
+                alert("내용 써 !!!");
+              } else {
+                alert("수정되었어 !");
+                window.location.href = "/guestbook_list";
+              }
             },
           });
         });

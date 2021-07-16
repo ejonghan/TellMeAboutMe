@@ -28,12 +28,6 @@
         <tr>
           <th>{{ key }}</th>
           <td><a href={{url_for('main.anchor_routing_guestbook', id=key)}}>{{ value }}</a></td>
-          <td>
-            <form action="guestbook" method="POST">
-              <input type="hidden" name="id" value="{{key}}" />
-              <input type="submit" value="보기" />
-            </form>
-          </td>
         </tr>
         {% endfor %}
       </table>

@@ -11,27 +11,46 @@ def index():
     return render_template('/main/index.html')
 
 
-@main.route('/submit', methods=['POST'])
-def submit():
+@main.route('/input_form', methods=['POST'])
+def input_form():
     if request.method == 'POST':
 
         # form data preprocesscing
-        writter = request.form['writter']
-        description = request.form['description']
-        password = request.form['password']
+        info = request.get_json()
 
-        # database insert query
-        db = Database()
-        sql = "INSERT INTO tellmeaboutme.list(writter, description, created, password) VALUES('%s', '%s', NOW(), '%s')" % (
-            writter, description, password)
-        db.execute(sql)
-        db.commit()
+        writter = info['writter']
+        description = info['description']
+        password = info['password']
 
-        return render_template('/submit.html')
+        if writter == "":
+            return json.dumps("empty writter")
+
+        elif description == "":
+            return json.dumps("empty description")
+
+        elif password == "":
+            return json.dumps("empty password")
+
+        else:
+            # database insert query
+            db = Database()
+            sql = "INSERT INTO tellmeaboutme.list(writter, description, created, password) VALUES('%s', '%s', NOW(), '%s')" % (
+                writter, description, password)
+            db.execute(sql)
+            db.commit()
+
+            return json.dumps("yes")
 
 
-@main.route('/guestbook_list', methods=['GET', 'post', 'DELETE'])
+@main.route('/submit', methods=['GET'])
+def submit():
+
+    return render_template('/submit.html')
+
+
+@main.route('/guestbook_list', methods=['GET'])
 def guestbook_list():
+
     if request.method == 'GET':
 
         # database select query
@@ -48,55 +67,11 @@ def guestbook_list():
 
         return render_template('/guestbook_list.html', view_dict=view_dict)
 
-    elif request.method == 'POST':
 
-        # database select query
-        db = Database()
-        sql = "SELECT * FROM tellmeaboutme.list"
-        view = db.executeAll(sql)
-
-        view_dict = {}
-
-        # create dict using script
-        for i in range(len(view)):
-
-            view_dict[str(view[i]['id'])] = f"{view[i]['writter']}님의 게시물"
-
-        return render_template('/guestbook_list.html', view_dict=view_dict)
-
-    elif request.method == 'DELETE':
-
-        # database select query
-        db = Database()
-        sql = "SELECT * FROM tellmeaboutme.list"
-        view = db.executeAll(sql)
-
-        view_dict = {}
-
-        # create dict using script
-        for i in range(len(view)):
-
-            view_dict[str(view[i]['id'])] = f"{view[i]['writter']}님의 게시물"
-        print(view_dict)
-        return render_template('/guestbook_list.html', view_dict=view_dict)
-
-
-@main.route('/guestbook', methods=['GET', 'POST'])
+@main.route('/guestbook', methods=['GET'])
 def guestbook():
 
-    # routed when you click '보기' button
-    if request.method == 'POST':
-
-        get_id = request.form['id']
-
-        db = Database()
-        sql = f"SELECT * FROM tellmeaboutme.list WHERE id={get_id}"
-        view = db.executeOne(sql)
-
-        return render_template('/guestbook.html', view=view, get_id=get_id)
-
-    # routed when you clink anchor tag
-    else:
+    if request.method == 'GET':
 
         get_id = request.args.get('id')
 
@@ -110,7 +85,7 @@ def guestbook():
 @main.route('/guestbook/<int:id>', methods=['GET'])
 def anchor_routing_guestbook(id):
 
-    return redirect(url_for('main.guestbook', _method='POST', id=id))
+    return redirect(url_for('main.guestbook', id=id))
 
 
 @main.route('/delete', methods=["DELETE"])
@@ -121,7 +96,6 @@ def delete():
     get_id = info['id']
     origin_password = info['origin_password']
     input_password = info['input_password']
-    print(info)
 
     if origin_password == input_password:
         db = Database()
@@ -139,7 +113,6 @@ def delete():
         db.execute(auto_increment_sql3)
         db.commit()
 
-        print(url_for('main.guestbook_list'))
         return json.dumps("yes")
 
     else:
@@ -155,24 +128,29 @@ def update():
     writter = info['writter']
     description = info['description']
 
-    db = Database()
+    if writter == "":
+        return json.dumps("empty_writter")
+    elif description == "":
+        return json.dumps("empty_description")
+    else:
+        db = Database()
 
-    update_sql1 = "UPDATE tellmeaboutme.list SET writter='%s' WHERE id='%s'" % (
-        writter, get_id)
-    db.execute(update_sql1)
-    update_sql2 = "UPDATE tellmeaboutme.list SET description='%s' WHERE id='%s'" % (
-        description, get_id)
-    db.execute(update_sql2)
-    db.commit()
+        update_sql1 = "UPDATE tellmeaboutme.list SET writter='%s' WHERE id='%s'" % (
+            writter, get_id)
+        db.execute(update_sql1)
+        update_sql2 = "UPDATE tellmeaboutme.list SET description='%s' WHERE id='%s'" % (
+            description, get_id)
+        db.execute(update_sql2)
+        db.commit()
 
-    return json.dumps("yes")
+        return json.dumps("yes")
 
 
 @main.route('/update_passwordcheck', methods=["POST"])
 def update_passwordcheck():
 
     info = request.get_json()
-    print(info)
+
     origin_password = info['origin_password']
     input_password = info['input_password']
 
@@ -190,12 +168,11 @@ def update_form(get_id):
     return render_template("/update_form.html", get_id=get_id)
 
 
-@main.route('/divide_method', methods=["POST"])
-def divide_method():
+@main.route('/password_check', methods=["POST"])
+def password_check():
 
     _method = request.form['_method']
     get_id = request.form['id']
     password = request.form['password']
-    print(_method)
 
-    return render_template('checkpassword1.html', _method=_method, get_id=get_id, password=password)
+    return render_template('checkpassword.html', _method=_method, get_id=get_id, password=password)
