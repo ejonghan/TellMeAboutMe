@@ -6,41 +6,39 @@
         text-align: center;
       }
     </style>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
   </head>
   <body>
     <div>
+      <input type="text" id="writter" placeholder="니 이름 써라" /><br /><br />
+      <textarea rows="5" cols="30" id="description"></textarea><br /><br />
+      <input type="button" id="execute" value="수정" />
+
       <script>
-        function confirm_check() {
-          var writter = document.getElementById("writter").value;
-          var description = document.getElementById("description").value;
-          if (writter == "") {
-            alert("이름 써!!");
-            return false;
-          } else if (description == "") {
-            alert("내용 써!!");
-            return false;
-          }
-          confirm("바뀌었어 !");
-          return true;
-        }
+        $("#execute").click(function () {
+          var id = "{{get_id}}";
+          var writter = $("#writter").val();
+          var description = $("#description").val();
+
+          var postdata = {
+            id: id,
+            writter: writter,
+            description: description,
+          };
+
+          $.ajax({
+            type: "UPDATE",
+            url: '{{url_for("main.update")}}',
+            data: JSON.stringify(postdata),
+            dataType: "JSON",
+            contentType: "application/json",
+            success: function (msg) {
+              alert("수정되었어!");
+              window.location.href = "/guestbook_list";
+            },
+          });
+        });
       </script>
-      <form action="update" onsubmit="return confirm_check();" method="POST">
-        <input type="hidden" name="id" value="{{get_id}}" />
-        <input
-          type="text"
-          name="writter"
-          id="writter"
-          size="15"
-          placeholder="니 이름 써라"
-        />
-        <br />
-        <br />
-        <textarea name="description" rows="5," cols="30" id="description">
-        </textarea>
-        <br />
-        <br />
-        <input type="submit" value="수정완료" />
-      </form>
     </div>
   </body>
 </html>

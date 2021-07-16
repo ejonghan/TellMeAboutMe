@@ -146,12 +146,14 @@ def delete():
         return json.dumps("no")
 
 
-@main.route('/update', methods=["POST"])
+@main.route('/update', methods=["UPDATE"])
 def update():
 
-    get_id = request.form['id']
-    writter = request.form['writter']
-    description = request.form['description']
+    info = request.get_json()
+
+    get_id = info['id']
+    writter = info['writter']
+    description = info['description']
 
     db = Database()
 
@@ -163,7 +165,7 @@ def update():
     db.execute(update_sql2)
     db.commit()
 
-    return redirect(url_for('main.guestbook_list'))
+    return json.dumps("yes")
 
 
 @main.route('/update_passwordcheck', methods=["POST"])
@@ -182,10 +184,10 @@ def update_passwordcheck():
         return json.dumps("no")
 
 
-@main.route('/update_form/<string:id>', methods=["GET"])
-def update_form(id):
+@main.route('/update_form/<string:get_id>', methods=["GET"])
+def update_form(get_id):
 
-    return render_template("/update_form.html", id=id)
+    return render_template("/update_form.html", get_id=get_id)
 
 
 @main.route('/divide_method', methods=["POST"])
