@@ -166,12 +166,26 @@ def update():
     return redirect(url_for('main.guestbook_list'))
 
 
-@main.route('/update_form', methods=["GET"])
-def update_form():
+@main.route('/update_passwordcheck', methods=["POST"])
+def update_passwordcheck():
 
-    get_id = request.args.get('id')
+    info = request.get_json()
+    print(info)
+    origin_password = info['origin_password']
+    input_password = info['input_password']
 
-    return render_template('update_form.html', get_id=get_id)
+    if origin_password == input_password:
+
+        return json.dumps("yes")
+
+    else:
+        return json.dumps("no")
+
+
+@main.route('/update_form/<string:id>', methods=["GET"])
+def update_form(id):
+
+    return render_template("/update_form.html", id=id)
 
 
 @main.route('/divide_method', methods=["POST"])
@@ -180,18 +194,6 @@ def divide_method():
     _method = request.form['_method']
     get_id = request.form['id']
     password = request.form['password']
+    print(_method)
 
-    if _method == "delete":
-        return redirect(url_for('main.delete', get_id=get_id))
-    else:
-        return redirect(url_for('main.update_form', id=id))
-
-
-@main.route('/password_check', methods=["POST"])
-def password_check():
-
-    _method = request.form['_method']
-    get_id = request.form['id']
-    password = request.form['password']
-
-    return render_template('/checkpassword1.html', _method=_method, get_id=get_id, password=password)
+    return render_template('checkpassword1.html', _method=_method, get_id=get_id, password=password)
