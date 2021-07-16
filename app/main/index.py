@@ -1,4 +1,4 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for, jsonify
+from flask import Blueprint, request, render_template, flash, redirect, url_for, jsonify, json
 from flask import current_app as app
 
 from app.module.dbModule import Database
@@ -77,7 +77,7 @@ def guestbook_list():
         for i in range(len(view)):
 
             view_dict[str(view[i]['id'])] = f"{view[i]['writter']}님의 게시물"
-
+        print(view_dict)
         return render_template('/guestbook_list.html', view_dict=view_dict)
 
 
@@ -122,6 +122,7 @@ def delete():
     origin_password = info['origin_password']
     input_password = info['input_password']
     print(info)
+
     if origin_password == input_password:
         db = Database()
 
@@ -138,10 +139,11 @@ def delete():
         db.execute(auto_increment_sql3)
         db.commit()
 
-        return redirect(url_for('main.guestbook_list'))
+        print(url_for('main.guestbook_list'))
+        return json.dumps("yes")
 
     else:
-        return jsonify(message="비밀번호 틀렸엉 !")
+        return json.dumps("no")
 
 
 @main.route('/update', methods=["POST"])
@@ -176,10 +178,11 @@ def update_form():
 def divide_method():
 
     _method = request.form['_method']
-    id = request.form['id']
+    get_id = request.form['id']
+    password = request.form['password']
 
     if _method == "delete":
-        return redirect(url_for('main.delete', id=id))
+        return redirect(url_for('main.delete', get_id=get_id))
     else:
         return redirect(url_for('main.update_form', id=id))
 
