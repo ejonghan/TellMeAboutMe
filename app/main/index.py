@@ -119,7 +119,7 @@ def delete():
         return json.dumps("no")
 
 
-@main.route('/update', methods=["UPDATE"])
+@main.route('/update', methods=["PUT"])
 def update():
 
     info = request.get_json()

@@ -27,7 +27,7 @@
           };
 
           $.ajax({
-            type: "UPDATE",
+            type: "PUT",
             url: '{{url_for("main.update")}}',
             data: JSON.stringify(postdata),
             dataType: "JSON",
