@@ -16,11 +16,11 @@ def input_form():
     if request.method == 'POST':
 
         # form data preprocesscing
-        info = request.get_json()
+        form_data = request.get_json()
 
-        writter = info['writter']
-        description = info['description']
-        password = info['password']
+        writter = form_data['writter']
+        description = form_data['description']
+        password = form_data['password']
 
         if writter == "":
             return json.dumps("empty writter")
