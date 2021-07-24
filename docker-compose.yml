@@ -1,0 +1,6 @@
+version: "2.2"
+services:
+  backend:
+    image: tellmeaboutme_backend
+    ports:
+      - "5000:5000"
