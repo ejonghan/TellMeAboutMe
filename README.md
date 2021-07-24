@@ -10,8 +10,7 @@ DELETE, PUT 방식을 구현하기 위해서 서버와 클라이언트간에 for
 
 실행 방법
 ```
-sh deploy.sh
-
+>> sh deploy.sh
 ```
 
 # API
