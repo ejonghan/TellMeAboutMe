@@ -10,15 +10,7 @@ db = Database()
 
 @main.route('/', methods=['GET'])
 def main_page():
-    data = model.user(
-        writter = '111',
-        description = '111',
-        created = datetime.now(),
-        password = '1234'
-    )
-    model.db.session.add(data)
-    model.db.session.commit()
-    model.db.session.remove()
+    
     return render_template('/main/index.html')
 
 
@@ -29,25 +21,31 @@ def input_form():
         # form data preprocesscing
         form_data = request.get_json()
 
-        writter = form_data['writter']
-        description = form_data['description']
-        password = form_data['password']
+        input_writter = form_data['writter']
+        input_description = form_data['description']
+        input_password = form_data['password']
 
-        if writter == "":
+        if input_writter == "":
             return json.dumps("empty writter")
 
-        elif description == "":
+        elif input_description == "":
             return json.dumps("empty description")
 
-        elif password == "":
+        elif input_password == "":
             return json.dumps("empty password")
 
         else:
             # database insert query
-            sql = "INSERT INTO tellmeaboutme.list(writter, description, created, password) VALUES('%s', '%s', NOW(), '%s')" % (
-                writter, description, password)
-            db.execute(sql)
-            db.commit()
+            data = model.user(
+                writter = input_writter,
+                description = input_description,
+                created = datetime.now(),
+                password = input_password
+            )
+
+            model.db.session.add(data)
+            model.db.session.commit()
+            model.db.session.remove()
 
             return json.dumps("yes")
 
