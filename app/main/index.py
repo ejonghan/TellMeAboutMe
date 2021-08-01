@@ -4,6 +4,7 @@ from flask import current_app as app
 from app.module.dbModule import Database
 
 main = Blueprint('main', __name__, url_prefix='/')
+db = Database()
 
 
 @main.route('/', methods=['GET'])
@@ -33,7 +34,6 @@ def input_form():
 
         else:
             # database insert query
-            db = Database()
             sql = "INSERT INTO tellmeaboutme.list(writter, description, created, password) VALUES('%s', '%s', NOW(), '%s')" % (
                 writter, description, password)
             db.execute(sql)
@@ -54,7 +54,6 @@ def guestbook_list():
     if request.method == 'GET':
 
         # database select query
-        db = Database()
         sql = "SELECT * FROM tellmeaboutme.list"
         view = db.executeAll(sql)
 
@@ -75,7 +74,6 @@ def guestbook():
 
         get_id = request.args.get('id')
 
-        db = Database()
         sql = f"SELECT * FROM tellmeaboutme.list WHERE id={get_id}"
         view = db.executeOne(sql)
 
@@ -98,7 +96,6 @@ def delete():
     input_password = info['input_password']
 
     if origin_password == input_password:
-        db = Database()
 
         # database delete query
         delete_sql = f"DELETE FROM tellmeaboutme.list WHERE id={get_id}"
@@ -133,7 +130,6 @@ def update():
     elif description == "":
         return json.dumps("empty_description")
     else:
-        db = Database()
 
         update_sql1 = "UPDATE tellmeaboutme.list SET writter='%s' WHERE id='%s'" % (
             writter, get_id)
