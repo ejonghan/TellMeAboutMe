@@ -10,8 +10,8 @@
   <body>
     <div>
       <br /><br /><br /><br /><br />
-      작성자 : {{view['writter']}}<br /><br />내용 : {{view['description']}}<br /><br />작성날짜
-      : {{view['created']}}
+      작성자 : {{select_user.writter}}<br /><br />내용 : {{select_user.description}}<br /><br />작성날짜
+      : {{select_user.created}}
     </div>
     <div>
       <br />
@@ -31,14 +31,14 @@
         <br /><br /><br /><br /><br /><br />
         <input type="hidden" name="id" value="{{get_id}}" />
         <input type="hidden" name="_method" value="delete" />
-        <input type="hidden" name="password" value="{{view['password']}}">
+        <input type="hidden" name="password" value="{{select_user.password}}">
         <input type="submit" value="삭제하기" />
       </form>
       <form action="password_check" onsubmit="return check_update();" method="POST">
         <br />
         <input type="hidden" name="id" value="{{get_id}}" />
         <input type="hidden" name="_method" value="update" />
-        <input type="hidden" name="password" value="{{view['password']}}">
+        <input type="hidden" name="password" value="{{select_user.password}}">
         <input type="submit" value="수정하기" />
       </form>
     </div>

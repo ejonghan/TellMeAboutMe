@@ -62,17 +62,15 @@ def guestbook_list():
     if request.method == 'GET':
 
         # database select query
-        sql = "SELECT * FROM tellmeaboutme.list"
-        view = db.executeAll(sql)
-
-        view_dict = {}
+        select_user = model.user.query.all()
+        users = {}
 
         # create dict using script
-        for i in range(len(view)):
+        for i in range(len(select_user)):
 
-            view_dict[str(view[i]['id'])] = f"{view[i]['writter']}님의 게시물"
+            users[str(select_user[i].id)] = f"{select_user[i].writter}님의 게시물"
 
-        return render_template('/guestbook_list.html', view_dict=view_dict)
+        return render_template('/guestbook_list.html', users=users)
 
 
 @main.route('/guestbook', methods=['GET'])
@@ -81,11 +79,10 @@ def guestbook():
     if request.method == 'GET':
 
         get_id = request.args.get('id')
+        select_user = model.user.query.filter_by(id=get_id).all()
+        select_user = select_user[0]
 
-        sql = f"SELECT * FROM tellmeaboutme.list WHERE id={get_id}"
-        view = db.executeOne(sql)
-
-        return render_template('/guestbook.html', view=view, get_id=get_id)
+        return render_template('/guestbook.html', select_user = select_user, get_id=get_id)
 
 
 @main.route('/guestbook/<int:id>', methods=['GET'])
@@ -106,17 +103,12 @@ def delete():
     if origin_password == input_password:
 
         # database delete query
-        delete_sql = f"DELETE FROM tellmeaboutme.list WHERE id={get_id}"
-        db.execute(delete_sql)
-
-        # database auto_increment(id value) rearrange query
-        auto_increment_sql1 = "ALTER TABLE tellmeaboutme.list AUTO_INCREMENT=1"
-        db.execute(auto_increment_sql1)
-        auto_increment_sql2 = "SET @count = 0"
-        db.execute(auto_increment_sql2)
-        auto_increment_sql3 = "UPDATE tellmeaboutme.list SET id = @count:=@count+1"
-        db.execute(auto_increment_sql3)
-        db.commit()
+        select_user = model.user.query.filter_by(id = get_id).all()
+        select_user = select_user[0]
+        model.db.session.delete(select_user)
+        model.db.session.commit()
+        model.db.session.remove()
+        
 
         return json.dumps("yes")
 
@@ -130,22 +122,20 @@ def update():
     info = request.get_json()
 
     get_id = info['id']
-    writter = info['writter']
-    description = info['description']
+    get_writter = info['writter']
+    get_description = info['description']
 
-    if writter == "":
+    if get_writter == "":
         return json.dumps("empty_writter")
-    elif description == "":
+    elif get_description == "":
         return json.dumps("empty_description")
     else:
 
-        update_sql1 = "UPDATE tellmeaboutme.list SET writter='%s' WHERE id='%s'" % (
-            writter, get_id)
-        db.execute(update_sql1)
-        update_sql2 = "UPDATE tellmeaboutme.list SET description='%s' WHERE id='%s'" % (
-            description, get_id)
-        db.execute(update_sql2)
-        db.commit()
+        user = model.user.query.get(get_id)
+        user.writter = get_writter
+        user.description = get_description
+        model.db.session.commit()
+        model.db.session.remove()
 
         return json.dumps("yes")
 
