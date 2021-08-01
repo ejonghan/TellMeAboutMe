@@ -1,12 +1,9 @@
 from flask import Blueprint, request, render_template, redirect, url_for, json
 from flask import current_app as app
-from app.module.dbModule import Database
 from app import model
 from datetime import datetime
 
 main = Blueprint('main', __name__, url_prefix='/')
-db = Database()
-
 
 @main.route('/', methods=['GET'])
 def main_page():
