@@ -1,14 +1,24 @@
-from flask import Blueprint, request, render_template, flash, redirect, url_for, jsonify, json
+from flask import Blueprint, request, render_template, redirect, url_for, json
 from flask import current_app as app
-
 from app.module.dbModule import Database
+from app import model
+from datetime import datetime
 
 main = Blueprint('main', __name__, url_prefix='/')
 db = Database()
 
 
 @main.route('/', methods=['GET'])
-def index():
+def main_page():
+    data = model.user(
+        writter = '111',
+        description = '111',
+        created = datetime.now(),
+        password = '1234'
+    )
+    model.db.session.add(data)
+    model.db.session.commit()
+    model.db.session.remove()
     return render_template('/main/index.html')
 
 
