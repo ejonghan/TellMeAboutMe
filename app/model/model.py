@@ -13,7 +13,7 @@ class user(db.Model):
     description = db.Column(db.Text, nullable=False)
     created = db.Column(db.DateTime, nullable=False)
     password = db.Column(db.String(10), nullable=False)
-
+    
 
 def __init__(self, id, writter, description, created, password):
     self.id = id

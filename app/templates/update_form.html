@@ -28,7 +28,7 @@
 
           $.ajax({
             type: "PUT",
-            url: '{{url_for("main.update")}}',
+            url: '{{url_for("edit_guestbook.update")}}',
             data: JSON.stringify(postdata),
             dataType: "JSON",
             contentType: "application/json",
