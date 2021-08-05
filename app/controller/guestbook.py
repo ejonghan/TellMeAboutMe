@@ -7,7 +7,6 @@ blueprint = Blueprint("guestbook", __name__, url_prefix="/")
 def guestbook_list():
 
     if request.method == 'GET':
-
         # database select query
         select_user = model.user.query.all()
         users = {}
