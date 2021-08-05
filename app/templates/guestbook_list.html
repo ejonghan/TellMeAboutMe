@@ -24,10 +24,10 @@
 
     <div>
       <table border="1">
-        {% for key, value in view_dict.items() %}
+        {% for key, value in users.items() %}
         <tr>
           <th>{{ key }}</th>
-          <td><a href={{url_for('main.anchor_routing_guestbook', id=key)}}>{{ value }}</a></td>
+          <td><a href={{url_for('guestbook.anchor_routing_guestbook', id=key)}}>{{ value }}</a></td>
         </tr>
         {% endfor %}
       </table>
