@@ -45,3 +45,23 @@ def input_form():
             model.db.session.remove()
 
             return json.dumps("yes")
+
+@main.route('/add_data', methods=["POST"])
+def add_data():
+    if request.method == 'POST':
+
+        get_data = request.get_json()
+
+        for i in range(10):
+            
+            data = model.user(
+                writter = str(i),
+                description = str(i),
+                created = datetime.now(),
+                password = str(123)
+            )
+
+            model.db.session.add(data)
+            model.db.session.commit()
+        
+        return json.dumps("yes")

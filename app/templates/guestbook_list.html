@@ -21,7 +21,12 @@
     <div>
       <h1>방명록 게시글 목록</h1>
     </div>
-
+    <div>
+      {% for item in page_data.items %}
+      {{item}}
+      <br>
+      {% endfor %}
+    </div>
     <div>
       <table border="1">
         {% for key, value in users.items() %}
