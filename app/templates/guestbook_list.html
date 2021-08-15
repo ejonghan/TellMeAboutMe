@@ -22,10 +22,14 @@
       <h1>방명록 게시글 목록</h1>
     </div>
     <div>
-      {% for item in page_data.items %}
-      {{item}}
+      {% for page in page_data.items %}
+      {{page.writter}}
       <br>
       {% endfor %}
+      {% for page_num in page_data.iter_pages() %}
+      <a href="?page={{ page_num }}">{{page_num}}</a> 
+      {% endfor %}
+
     </div>
     <div>
       <table border="1">

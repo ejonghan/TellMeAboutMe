@@ -52,7 +52,7 @@ def add_data():
 
         get_data = request.get_json()
 
-        for i in range(10):
+        for i in range(100):
             
             data = model.user(
                 writter = str(i),
@@ -63,5 +63,6 @@ def add_data():
 
             model.db.session.add(data)
             model.db.session.commit()
+            model.db.session.remove()
         
         return json.dumps("yes")

@@ -4,13 +4,15 @@ from app.model import model
 
 blueprint = Blueprint("guestbook", __name__, url_prefix="/")
 
-@blueprint.route("/guestbook_list", methods=['GET'])
+@blueprint.route("/guestbook_list/", methods=['GET'])
 def guestbook_list():
 
     if request.method == 'GET':
+        page = request.args.get('page', type=int, default=1)
         # database select query
         select_user = model.user.query.all()
-        page_data = Pagination(select_user, page=1, per_page=10, total=1, items=1)
+        #page_data = Pagination(select_user, page=1, per_page=10, total=1, items=1)
+        page_data = model.user.query.paginate(page, 10 , error_out=False)
         users = {}
         # create dict using script
         for i in range(len(select_user)):
