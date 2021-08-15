@@ -23,6 +23,7 @@ def guestbook():
 
         get_id = request.args.get('id')
         select_user = model.user.query.filter_by(id=get_id).all()
+        model.db.session.remove()
         select_user = select_user[0]
 
         return render_template('/guestbook.html', select_user = select_user, get_id=get_id)
