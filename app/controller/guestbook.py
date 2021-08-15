@@ -8,11 +8,19 @@ blueprint = Blueprint("guestbook", __name__, url_prefix="/")
 def guestbook_list():
 
     if request.method == 'GET':
+
+        # GET 방식으로 요청한 url을 page값으로 가져오기위해 
         page = request.args.get('page', type=int, default=1)
+
         # database select query
         select_user = model.user.query.all()
-        model.db.session.remove()
+
+        # pagenation 객체 생성
         page_data = model.user.query.paginate(page, 10 , error_out=False)
+
+        # Queue pool overflow error 방지를 위해 
+        # 매번 query를 날릴때마다 작업 후 seesion을 끊어준다
+        model.db.session.remove()
 
         return render_template('/guestbook_list.html', page_data=page_data)
 
