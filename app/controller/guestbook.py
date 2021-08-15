@@ -11,15 +11,10 @@ def guestbook_list():
         page = request.args.get('page', type=int, default=1)
         # database select query
         select_user = model.user.query.all()
-        #page_data = Pagination(select_user, page=1, per_page=10, total=1, items=1)
+        model.db.session.remove()
         page_data = model.user.query.paginate(page, 10 , error_out=False)
-        users = {}
-        # create dict using script
-        for i in range(len(select_user)):
 
-            users[str(select_user[i].id)] = f"{select_user[i].writter}님의 게시물"
-
-        return render_template('/guestbook_list.html', users=users, page_data=page_data)
+        return render_template('/guestbook_list.html', page_data=page_data)
 
 @blueprint.route('/guestbook', methods=['GET'])
 def guestbook():

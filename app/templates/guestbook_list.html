@@ -21,28 +21,30 @@
     <div>
       <h1>방명록 게시글 목록</h1>
     </div>
-    <div>
-      {% for page in page_data.items %}
-      {{page.writter}}
-      <br>
-      {% endfor %}
-      {% for page_num in page_data.iter_pages() %}
-      <a href="?page={{ page_num }}">{{page_num}}</a> 
-      {% endfor %}
-
-    </div>
+  
     <div>
       <table border="1">
-        {% for key, value in users.items() %}
+        {% for page in page_data.items %}
         <tr>
-          <th>{{ key }}</th>
-          <td><a href={{url_for('guestbook.anchor_routing_guestbook', id=key)}}>{{ value }}</a></td>
+          <td><a href={{url_for('guestbook.anchor_routing_guestbook', id=page.id)}}>{{ page.writter }}님의 게시물</a></td>
         </tr>
         {% endfor %}
       </table>
       <br /><br />
     </div>
     <div>
+      {% if page_data.has_prev %}
+        <a href="?page={{ page_data.prev_num }}">이전</a>
+      {% endif %}
+      {% for page_num in page_data.iter_pages() %}
+      <a href="?page={{ page_num }}">{{page_num}}</a> 
+      {% endfor %}
+      {% if page_data.has_next %}
+        <a href="?page={{ page_data.next_num }}">다음</a>
+      {% endif %}
+    </div>
+    <div>
+      <br><br>
       <form action="/" method="GET">
         <input type="submit" value="다시 남기기" />
       </form>
