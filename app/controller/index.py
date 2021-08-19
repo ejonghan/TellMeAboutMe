@@ -1,13 +1,12 @@
 from flask import Blueprint, request, render_template, redirect, url_for, json
 from app.model import model
 from datetime import datetime
-from sqlalchemy import text
 
 main = Blueprint('main', __name__, url_prefix='/')
 
 @main.route('/', methods=['GET'])
 def main_page():
-    print(1)
+    
     return render_template('/main/index.html')
 
 
@@ -45,3 +44,24 @@ def input_form():
             model.db.session.remove()
 
             return json.dumps("yes")
+
+@main.route('/add_data', methods=["POST"])
+def add_data():
+    if request.method == 'POST':
+
+        get_data = request.get_json()
+
+        for i in range(100):
+            
+            data = model.user(
+                writter = str(i),
+                description = str(i),
+                created = datetime.now(),
+                password = str(123)
+            )
+
+            model.db.session.add(data)
+            model.db.session.commit()
+            model.db.session.remove()
+        
+        return json.dumps("yes")
