@@ -24,8 +24,7 @@
         placeholder="비밀번호 써라"
       /><br /><br />
       <input type="button" id="execute" value="완료" />
-      <br /><br />
-      <input type="button" id="add_list" value="10개생성" />
+
       <script>
         $("#execute").click(function () {
           var writter = $("#writter").val();
@@ -55,24 +54,6 @@
                 alert("잘했어 !");
                 window.location.href = "/submit";
               }
-            },
-          });
-        });
-        $("#add_list").click(function () {
-          var add_data = {
-            writter: 1,
-            description: 1,
-            password: 123,
-          };
-          $.ajax({
-            type: "POST",
-            url: '{{url_for("main.add_data")}}',
-            data: JSON.stringify(add_data),
-            dataType: "JSON",
-            contentType: "application/json",
-            success: function (msg) {
-              alert("성공 !");
-              window.location.href = "/submit";
             },
           });
         });
