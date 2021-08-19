@@ -1,13 +1,12 @@
 from flask import Blueprint, request, render_template, redirect, url_for, json
 from app.model import model
 from datetime import datetime
-from sqlalchemy import text
 
 main = Blueprint('main', __name__, url_prefix='/')
 
 @main.route('/', methods=['GET'])
 def main_page():
-    print(1)
+    
     return render_template('/main/index.html')
 
 
